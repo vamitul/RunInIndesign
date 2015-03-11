@@ -1,0 +1,29 @@
+[{
+    "available": [
+        {
+            "identifier": "",
+            "name": "(default)"
+        },
+        {
+            "identifier": "CS6",
+            "name": "CS6"
+        },
+        {
+            "identifier": "",
+            "name": "CC (x32)"
+        },
+        {
+            "identifier": "CC",
+            "name": "CC (x64)"
+        },
+        {
+            "identifier": "",
+            "name": "CC 2014 (x32)"
+        },
+        {
+            "identifier": "CC.2014",
+            "name": "CC 2014 (x64)"
+        }
+    ],
+    "target": ""
+}]

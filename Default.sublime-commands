@@ -1,6 +1,12 @@
 [
   {
-    "caption": "Run with Indesign",
-    "command": "run_in_indesign"
+    "caption": "Run in InDesign",
+    "command": "run_in_indesign",
+    "args":{"command":"run"}
+  },
+  {
+    "caption": "Select InDesign version",
+    "command": "run_in_indesign",
+    "args":{"command":"select"}
   },
 ]

@@ -15,14 +15,32 @@ PATH = os.path.dirname(os.path.realpath(__file__))
 HOST, PORT = "localhost", 0
 
 class RunInIndesignCommand(sublime_plugin.TextCommand):
-	def run(self, edit):
+	def run(self,edit, command):
+		if command== 'run':
+			self.runC(self)
+		else:
+			self.selectTarget()
+	def selectTarget(self):
+		sett=sublime.load_settings('RunInIndesign.sublime-settings')
+		ctarget=sett.get('target','default')
+		available=sett.get('available')
+		#print (map(lambda c:c['name'],available))
+		self.view.window().show_quick_panel([it['name'] for it in available],self.targetSel)
+	def targetSel(self,index):
+		sett=sublime.load_settings('RunInIndesign.sublime-settings')
+		available=[it['identifier'] for it in sett.get('available')][index]
+		sett.set('target',available)
+		sublime.save_settings('RunInIndesign.sublime-settings')
+	def runC(self, edit):
 		self.window=self.view.window()
 		self.output_view = Cons(self.window)
 		self.clear(self.view)
 		myF=self.getFile()
 		sublime.status_message("Running "+myF+ "with Indesign")
 		iR=IndRunner(myF,self.output_view,self.processOtuput)
-		iR.runWin('CC')
+		sett=sublime.load_settings('RunInIndesign.sublime-settings')
+		currentTarget=sett.get('target')
+		iR.runWin('.'+currentTarget if currentTarget else '""')
 		
 		#iR.server.socket.close()
 	def getFile(self):
@@ -89,7 +107,7 @@ class RunInIndesignCommand(sublime_plugin.TextCommand):
 				try:	
 					l=int(line)
 				except ValueError:
-					l=0;
+					l=0
 				self.markLine(v,l)
 				self.window.focus_view(v)
 			except Exception as e:
@@ -113,7 +131,7 @@ class Cons(object):
 class LogServer (socketserver.TCPServer):
 	def __init__(self, server_address, RequestHandlerClass, cons, onExit, bind_and_activate=True):
 		self.console=cons
-		self.onExit=onExit;
+		self.onExit=onExit
 		socketserver.TCPServer.__init__(self,server_address,RequestHandlerClass)
 		return	
 
@@ -184,7 +202,7 @@ class IndRunner(object):
 	"""docstring for IndRunner"""
 	def __init__(self,fileToRun,cons,finis):
 		self.finis=finis
-		self.winRun=os.path.join(PATH,'utils','runJs.vbs');
+		self.winRun=os.path.join(PATH,'utils','runJs.vbs')
 		self.server = LogServer((HOST, PORT),LogRequestHandler,cons,finis)
 		self.runFile = fileToRun
 		ip, self.port = self.server.server_address

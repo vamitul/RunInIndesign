@@ -1,7 +1,7 @@
 myScript = Wscript.Arguments.Item(0)
 myPort = WScript.Arguments.Item(1)
 myVer = WScript.Arguments.Item(2)
-Set myInDesign = CreateObject("InDesign.Application"&"."&myVer)
+Set myInDesign = CreateObject("InDesign.Application"&myVer)
 Set myFileSystemObject = CreateObject("Scripting.FileSystemObject")
 Set myFile = myFileSystemObject.GetFile(myScript) 
 Set objShell = CreateObject("Wscript.Shell")

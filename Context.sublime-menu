@@ -1,0 +1,18 @@
+[{
+        "caption": "Indesign Tools",
+        "children": [{
+            "caption": "Run In InDesign",
+            "command": "run_in_indesign",
+            "args": {
+                "command": "run"
+            }
+        }, {
+            "caption": "Select InDesign Version",
+            "command": "run_in_indesign",
+            "args": {
+                "command": "select"
+            }
+        }, ],
+        "id": "indesign"
+    }
+]
