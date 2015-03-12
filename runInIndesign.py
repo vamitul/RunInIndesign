@@ -122,6 +122,11 @@ class Cons(object):
 	def __init__(self,window):
 		self.content=''
 		self.output_view = window.create_output_panel("console")
+		self.output_view.assign_syntax('Packages/Text/Plain text.tmLanguage')
+		self.output_view.settings().set("word_wrap", True)
+		self.output_view.settings().set("line_numbers", False)
+		self.output_view.settings().set("gutter", False)
+		self.output_view.settings().set("scroll_past_end", False)
 		self.window=window
 
 	def addText(self,txt):
