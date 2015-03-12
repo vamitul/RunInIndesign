@@ -234,7 +234,7 @@ class IndRunner(object):
 		f=open(self.jsxRun,'r')
 		txt=f.read()
 		f.close()
-		txt=re.sub('#targetengine.+?$','',txt,1,re.M)
+		txt=re.sub('#targetengine.+?[\n\r]+','',txt,1,re.M)
 		f=open(self.jsxRun,'w')
 		f.write(txt)
 		f.close()
