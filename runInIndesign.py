@@ -24,6 +24,7 @@ class RunInIndesignCommand(sublime_plugin.TextCommand):
 		sett=sublime.load_settings('RunInIndesign.sublime-settings')
 		ctarget=sett.get('target','default')
 		available=sett.get('available')
+		print(available)
 		#print (map(lambda c:c['name'],available))
 		self.view.window().show_quick_panel([it['name'] for it in available],self.targetSel)
 	def targetSel(self,index):
@@ -36,10 +37,13 @@ class RunInIndesignCommand(sublime_plugin.TextCommand):
 		self.output_view = Cons(self.window)
 		self.clear(self.view)
 		myF=self.getFile()
-		sublime.status_message("Running "+myF+ "with Indesign")
+		sublime.status_message("Running "+os.path.basename(myF)+ " with Indesign")
+		self.output_view.showConsole();
 		iR=IndRunner(myF,self.output_view,self.processOtuput)
 		sett=sublime.load_settings('RunInIndesign.sublime-settings')
 		currentTarget=sett.get('target')
+		self.output_view.addText("Running "+os.path.basename(myF)+ " with Indesign "+currentTarget+"\n")
+		iR.scanAndFixTargetEngine()
 		iR.runWin('.'+currentTarget if currentTarget else '""')
 		
 		#iR.server.socket.close()
@@ -203,6 +207,7 @@ class IndRunner(object):
 	def __init__(self,fileToRun,cons,finis):
 		self.finis=finis
 		self.winRun=os.path.join(PATH,'utils','runJs.vbs')
+		self.jsxRun=os.path.join(PATH,'utils','jsRunner.jsx')
 		self.server = LogServer((HOST, PORT),LogRequestHandler,cons,finis)
 		self.runFile = fileToRun
 		ip, self.port = self.server.server_address
@@ -219,6 +224,29 @@ class IndRunner(object):
 		# 	except KeyboardInterrupt:
 		# 		print('Exited')
 		# 		break   
+	def scanAndFixTargetEngine(self):
+		##reset the jsx to be sure
+		f=open(self.jsxRun,'r')
+		txt=f.read()
+		f.close()
+		txt=re.sub('#targetengine.+?$','',txt,1,re.M)
+		f=open(self.jsxRun,'w')
+		f.write(txt)
+		f.close()
+
+
+		f = open(self.runFile,'r')
+		incl=re.search('#targetengine.+?$',f.read(),re.M)
+		f.close()
+		if incl:
+			f=open(self.jsxRun,'r')
+			txt=f.read()
+			f.close()
+			txt=incl.group(0)+'\n'+txt
+			f=open(self.jsxRun,'w')
+			f.write(txt)
+			f.close()
+
 
 	def runWin(self, specif):
 		try:

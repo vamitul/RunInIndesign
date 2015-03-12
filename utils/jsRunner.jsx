@@ -1,3 +1,4 @@
+#targetengine test
 $.sblimeRunner = {};
 $.sblimeRunner.write = $.write;
 $.sblimeRunner.writeln = $.writeln;
