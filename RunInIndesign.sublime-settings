@@ -9,20 +9,12 @@
             "name": "CS6"
         },
         {
-            "identifier": "",
-            "name": "CC (x32)"
-        },
-        {
             "identifier": "CC",
-            "name": "CC (x64)"
-        },
-        {
-            "identifier": "",
-            "name": "CC 2014 (x32)"
+            "name": "CC"
         },
         {
             "identifier": "CC.2014",
-            "name": "CC 2014 (x64)"
+            "name": "CC 2014"
         }
     ],
     "target": ""

@@ -44,7 +44,10 @@ class RunInIndesignCommand(sublime_plugin.TextCommand):
 		currentTarget=sett.get('target')
 		self.output_view.addText("Running "+os.path.basename(myF)+ " with Indesign "+currentTarget+"\n")
 		iR.scanAndFixTargetEngine()
-		iR.runWin('.'+currentTarget if currentTarget else '""')
+		if sys.platform == "darwin":
+			iR.runOsx(currentTarget)
+		else:	
+			iR.runWin('.'+currentTarget if currentTarget else '""')
 		
 		#iR.server.socket.close()
 	def getFile(self):
@@ -212,6 +215,7 @@ class IndRunner(object):
 	def __init__(self,fileToRun,cons,finis):
 		self.finis=finis
 		self.winRun=os.path.join(PATH,'utils','runJs.vbs')
+		self.osxRun=os.path.join(PATH,'utils','runJS.scpt')
 		self.jsxRun=os.path.join(PATH,'utils','jsRunner.jsx')
 		self.server = LogServer((HOST, PORT),LogRequestHandler,cons,finis)
 		self.runFile = fileToRun
@@ -240,8 +244,9 @@ class IndRunner(object):
 		f.close()
 
 
-		f = open(self.runFile,'r')
-		incl=re.search('#targetengine.+?$',f.read(),re.M)
+		f = open(self.runFile,'r',encoding="utf-8")
+		txt=f.read()
+		incl=re.search('#targetengine.+?$',txt,re.M)
 		f.close()
 		if incl:
 			f=open(self.jsxRun,'r')
@@ -252,7 +257,19 @@ class IndRunner(object):
 			f.write(txt)
 			f.close()
 
-
+	def runOsx(self,specif):
+		try:
+			print('specif:'+specif)
+			cmd='osascript "{}" "{}" {:d} {}'.format(self.osxRun,self.runFile,self.port,specif)
+			print (cmd)
+			self.server_thread.start()
+			self.proc = threading.Thread(target=AsyncProcess, args=(cmd,))
+			print('Server started')
+			#self.proc=AsyncProcess(cmd)
+			#print(self.proc._args)
+			self.proc.start()
+		except:
+			self.server.shutdown()	
 	def runWin(self, specif):
 		try:
 			cmd='cscript "{}" "{}" {:d} {}'.format(self.winRun,self.runFile,self.port,specif)
