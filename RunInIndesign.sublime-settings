@@ -5,6 +5,10 @@
             "name": "(default)"
         },
         {
+            "identifier": "CS5",
+            "name": "CS5"
+        },
+        {
             "identifier": "CS6",
             "name": "CS6"
         },
