@@ -23,6 +23,10 @@
         {
             "identifier": "CC.2015",
             "name": "CC 2015"
+        },
+        {
+            "identifier": "CC.2017",
+            "name": "CC 2017"
         }
     ],
     "target": ""
